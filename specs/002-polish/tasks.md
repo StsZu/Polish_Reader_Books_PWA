@@ -17,7 +17,7 @@
 - [x] **P07 Тести** — модульні й e2e переведено на польський текст; живі тести польською написано (не запускались).
   - Done: `npm test`, `npm run test:e2e` зелені.
 - [ ] **P08 Живі тести OpenAI польською** — **потребує дозволу на платні запити.**
-- [ ] **P09 Репозиторій і розгортання** — публічний GitHub (створено: https://github.com/StsZu/Polish_Reader_Books_PWA) і Cloudflare, як для English Reader. Cloudflare — підключає користувач.
+- [x] **P09 Репозиторій і розгортання** — публічний GitHub (https://github.com/StsZu/Polish_Reader_Books_PWA) і Cloudflare Workers Builds з `main`: https://polish-reader-books-pwa.sts-zubar.workers.dev/ (перевірено 2026-10-22: збірка `bcde7d6` на сайті, смоук-тест зелений).
 - [ ] **P10 Перевірка на iPad** — чек-лист `specs/001-pwa-copy/alignment.md` з польською книжкою; окремо: якість польського системного голосу, клавіатура з польськими літерами у вправах 3–4.
 - [x] **P11 Доопрацювання «Слухати»** (L1–L8, план — `English_Reader_Books_PWA/specs/002-audio-player/idea.md` → «Етап 0») — той самий патч, що в English Reader: старт з вибраного речення, «Продовжити» без зависання після утримання речення / вимови слова, тайм-аут тіла синтезу, сторожові таймери `<audio>` і системного голосу, одна повторна спроба речення.
   - Done: `npm test` (138), `npm run test:e2e` (36), `npm run check` зелені; ручна перевірка на iPad — відкрито.
@@ -25,4 +25,5 @@
 - [x] **P12 Аудіокнига (етап A)** — той самий програвач, що в English Reader (`English_Reader_Books_PWA/specs/002-audio-player/idea.md` → «Етап A»): аудіофайли книжки, повзунок на всю ширину, ±15 с, швидкість, доріжки, місце прослуховування, Media Session.
   - Done: `npm test` (149), `npm run test:e2e` (38), `npm run check` зелені; перевірка на iPad — відкрито.
 - [x] **P13 Аудіокнига: доопрацювання** — як в English Reader (`specs/002-audio-player/idea.md` → «Етап A.1»): відступ на 1 с (3 с після довгої паузи) при «Слухати» після паузи, ±5 с, швидкості 0,75 / 0,9 / 1,0 / 1,15 у меню, швидкість запам'ятовується для книжки.
-  - Done: `npm test` (152), `npm run test:e2e` (39), `npm run check` зелені; перевірка на iPad — відкрито.
+  - Done: `npm test` (152), `npm run test:e2e` (39), `npm run check` зелені; перевірено на iPad 2026-10-22.
+- [ ] **P14 Аудіокнига: зв'язок із розділами (етап B)** — відкладено 2026-10-22: спершу оцінити зручність у роботі. План-чернетка: `English_Reader_Books_PWA/specs/002-audio-player/idea.md` → «Етап B».
