@@ -1,7 +1,7 @@
 // Port of EnglishReader/Services/SavedStore.swift: saved words (one per lemma) and quotes,
 // stored as {words, quotes} in meta `saved`. Never sent to any service.
 import { signal } from '@preact/signals'
-import { fixtureSavedWords } from '../language.ts'
+import { fixtureSavedWords, fixtureSentence } from '../language.ts'
 import type { WordCard } from '../../contracts.ts'
 import type { ParagraphRef, SentenceRef } from '../model/book.ts'
 import { getValue, setValue } from '../storage/db.ts'
@@ -220,7 +220,7 @@ export async function seedForTests(): Promise<void> {
   const entries = fixtureSavedWords
   words.value = entries.map(([word, translation, part]) => ({
     id: uuid(), headword: word, lemma: word, ipa: '', partOfSpeech: part, level: '', forms: '', contextTranslation: translation,
-    otherTranslations: [], contexts: [{ sentence: `To jest ${word}.`, translation, place, date: nowISO() }], updatedAt: nowISO(),
+    otherTranslations: [], contexts: [{ sentence: fixtureSentence(word), translation, place, date: nowISO() }], updatedAt: nowISO(),
     trainingLevel: 0, nextReview: null, lastTrained: null, lastResultUnknown: false,
   }))
   await persist()

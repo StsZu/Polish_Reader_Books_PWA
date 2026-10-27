@@ -14,6 +14,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "size": "node scripts/size.mjs",
+    "sibling-diff": "node scripts/sibling-diff.mjs",
     "check": "npm run build && sh scripts/check-secrets.sh && node scripts/size.mjs"
   },
   "dependencies": {

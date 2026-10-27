@@ -5,7 +5,7 @@ import type { Book } from '../../src/core/model/book.ts'
 import { setAudioBackend, type AudioBackend } from '../../src/core/speech/audio.ts'
 import { OpenAISpeechEngine, silentWAV } from '../../src/core/speech/openai-speech.ts'
 import { PREFETCH_PARTS, RETRY_DELAY_MS, ReadingController, speechParts } from '../../src/core/speech/reading.ts'
-import { SystemSpeechEngine, bestVoice, phraseLimitMs } from '../../src/core/speech/system-speech.ts'
+import { SystemSpeechEngine, phraseLimitMs } from '../../src/core/speech/system-speech.ts'
 
 // MARK: - Minimal Cache Storage (happy-dom has none)
 
@@ -221,14 +221,6 @@ describe('SystemSpeechEngine', () => {
     vi.advanceTimersByTime(phraseLimitMs('Stuck.', 1) + 1000)
     await result
     vi.useRealTimers()
-  })
-
-  it('prefers higher-quality Polish voices, then pl-PL', () => {
-    const voice = (name: string, lang: string, localService = true) => ({ name, lang, localService }) as SpeechSynthesisVoice
-    const voices = [voice('Zosia', 'pl-PL'), voice('Ewa (Enhanced)', 'pl-PL'), voice('Daniel (Enhanced)', 'en-GB')]
-    expect(bestVoice(voices)?.name).toBe('Ewa (Enhanced)')
-    expect(bestVoice([voice('Daniel', 'en-GB'), voice('Zosia', 'pl_PL')])?.name).toBe('Zosia')
-    expect(bestVoice([voice('Daniel', 'en-GB')])).toBeNull()
   })
 })
 

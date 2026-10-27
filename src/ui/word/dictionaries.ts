@@ -1,18 +1,12 @@
-// Port of ExternalDictionary (EnglishReader/Services/AppSettings.swift) with Polish dictionaries (specs/002-polish/idea.md).
+// Port of ExternalDictionary (EnglishReader/Services/AppSettings.swift): web dictionaries opened from the word card (DT2).
+// The dictionaries of the book language are in src/core/language.ts; the encoding rules are the Swift ones.
+import { dictionaryPages, type DictionaryTerm } from '../../core/language.ts'
 import type { ExternalDictionaryID } from '../../core/storage/settings.ts'
 
-const info: Record<ExternalDictionaryID, { title: string; subtitle: string }> = {
-  wikislownik: { title: 'Wikisłownik', subtitle: 'польський словник з відмінюванням і прикладами' },
-  sjp: { title: 'SJP PWN', subtitle: 'тлумачний словник польської мови' },
-  wiktionary: { title: 'Wiktionary', subtitle: 'таблиці відмінювання й дієвідмінювання (англійською)' },
-  glosbe: { title: 'Glosbe', subtitle: 'словник і приклади, польська → українська' },
-  google: { title: 'Google Перекладач', subtitle: 'машинний переклад, польська → українська' },
-  deepl: { title: 'DeepL', subtitle: 'машинний переклад, польська → українська' },
-  reverso: { title: 'Reverso Context', subtitle: 'приклади в контексті, польська → англійська' },
-  forvo: { title: 'Forvo', subtitle: 'вимова носіями мови' },
+export const dictionaryInfo = (id: ExternalDictionaryID): { title: string; subtitle: string } => {
+  const { title, subtitle } = dictionaryPages[id]
+  return { title, subtitle }
 }
-
-export const dictionaryInfo = (id: ExternalDictionaryID): { title: string; subtitle: string } => info[id]
 
 /** Percent-encoding with an allowed set like Foundation's CharacterSet-based encoding. */
 function encode(text: string, keep: string): string {
@@ -22,6 +16,8 @@ function encode(text: string, keep: string): string {
   })
 }
 
+// .urlPathAllowed: alphanumerics and -._~!$&'()*+,;=:@/
+const PATH_ALLOWED = "!$&'()*+,;=:@/"
 // .urlPathAllowed minus "/?#" (word path component)
 const SEGMENT_ALLOWED = "!$&'()*+,;=:@"
 // URLComponents.queryItems keeps .urlQueryAllowed except & = (and leaves + as is)
@@ -35,18 +31,13 @@ function query(base: string, items: [string, string][]): string {
 export function dictionaryURL(id: ExternalDictionaryID, term: string): string | null {
   const trimmed = term.trim()
   if (!trimmed) return null
-  const path = encode(trimmed, SEGMENT_ALLOWED)
-  const wiki = encode(trimmed.replaceAll(' ', '_'), SEGMENT_ALLOWED)
-  switch (id) {
-    case 'wikislownik': return 'https://pl.wiktionary.org/wiki/' + wiki
-    case 'sjp': return 'https://sjp.pwn.pl/szukaj/' + path + '.html'
-    case 'wiktionary': return 'https://en.wiktionary.org/wiki/' + wiki + '#Polish'
-    case 'glosbe': return 'https://glosbe.com/pl/uk/' + path
-    case 'google': return query('https://translate.google.com/', [['sl', 'pl'], ['tl', 'uk'], ['text', trimmed], ['op', 'translate']])
-    case 'deepl': return 'https://www.deepl.com/translator#pl/uk/' + path
-    case 'reverso': return 'https://context.reverso.net/translation/polish-english/' + path
-    case 'forvo': return 'https://forvo.com/word/' + path + '/#pl'
+  const encoders: DictionaryTerm = {
+    text: trimmed,
+    segment: (text) => encode(text, SEGMENT_ALLOWED),
+    path: (text) => encode(text, PATH_ALLOWED),
+    query,
   }
+  return dictionaryPages[id].url(encoders)
 }
 
 /** Opens the page in a new window; an installed PWA shows it in the system Safari view (V-02). */

@@ -29,4 +29,6 @@
 - [ ] **P14 Аудіокнига: зв'язок із розділами (етап B)** — відкладено 2026-10-22: спершу оцінити зручність у роботі. План-чернетка: `English_Reader_Books_PWA/specs/002-audio-player/idea.md` → «Етап B».
 - [x] **P15 Відступ після паузи і швидкі клавіші** — як в English Reader (`English_Reader_Books_PWA/specs/003-resume-and-shortcuts/idea.md`): відступ 0,3 с (3 с після довгої паузи), пробіл, ←/→ (±5 с), Shift+←/→ (±30 с), [ ], , ., A, Enter, ?.
   - Done: `npm test` (156), `npm run test:e2e` (41), `npm run check` зелені; перевірка на iPad — відкрито.
+- [x] **P17 Підготовка до об'єднання (етап 0)** — `English_Reader_Books_PWA/specs/005-reliability/idea.md` → R0.1–R0.3: мовний модуль і в English Reader; тире діалогу, запасна мова голосу, словники й речення тестових слів — параметри `language.ts`; спільні тести однакові, мовні — `tests/fixtures/language.ts` і `tests/unit/language.test.ts`; `npm run sibling-diff`.
+  - Done (2026-10-27): `npm test` (158), `npm run test:e2e` (41), `npm run check`, `npm run sibling-diff` зелені.
 - [ ] **P16 Пропозиції** — спільний список для обох застосунків: `English_Reader_Books_PWA/specs/backlog.md` (резервна копія, таймер сну, обкладинка на заблокованому екрані, M4B, пісні MP3 з текстом). Виправлено 2026-10-22: нестабільний тест «місце після перезапуску», дублювання коду кнопок «Слухати / Пауза».

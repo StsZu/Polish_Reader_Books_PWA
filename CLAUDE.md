@@ -22,3 +22,4 @@
 - `npm run dev` (порт 5174) — розробка з тестовим режимом (`?reset`, `?testTranslation`, `?testSpeech`, `?testWordCard`, `?testSavedWords`, `?testRecording`, `?voice=system|openAI`, `?gallery`).
 - `npm test` — модульні тести; `npm run test:e2e` — WebKit iPad (порт 4176) + офлайн у Chromium; `npm run check` — production-збірка, секрети, CSP, розмір.
 - `npm run test:live` — платні живі тести OpenAI польською, лише з дозволом.
+- `npm run sibling-diff` — порівняння з English Reader: поза мовним модулем, мовними тестами (`tests/fixtures/language.ts`, `tests/unit/language.test.ts`) і дозволеним списком у `scripts/sibling-diff.mjs` файли мають збігатися байт у байт.

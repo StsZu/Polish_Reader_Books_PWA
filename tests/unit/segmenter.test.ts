@@ -48,29 +48,3 @@ describe('TextSegmenter', () => {
     expect(book.chapters[0].paragraphs[1].sentences).toEqual(['First.', 'Second.'])
   })
 })
-
-// Polish Reader (specs/002-polish): Polish abbreviations, initials and dialogue.
-describe('польське розбиття на речення', () => {
-  it('не розриває після польських скорочень та ініціалів', () => {
-    expect(sentences('Mieszkał przy ul. Długiej obok kościoła św. Jana. Potem wyjechał.'))
-      .toEqual(['Mieszkał przy ul. Długiej obok kościoła św. Jana.', 'Potem wyjechał.'])
-    expect(sentences('Wykład prowadził prof. Nowak, a pisał o tym J. Horain. Było późno.'))
-      .toEqual(['Wykład prowadził prof. Nowak, a pisał o tym J. Horain.', 'Było późno.'])
-    expect(sentences('Kupił różne owoce, np. Jabłka i gruszki.')).toEqual(['Kupił różne owoce, np. Jabłka i gruszki.'])
-  })
-
-  it('розриває після скорочень, що зазвичай закінчують речення', () => {
-    expect(sentences('Zabrał książki, zeszyty itd. Potem wyszedł.')).toEqual(['Zabrał książki, zeszyty itd.', 'Potem wyszedł.'])
-    expect(sentences('Stało się to w 1830 r. Polacy walczyli długo.')).toEqual(['Stało się to w 1830 r.', 'Polacy walczyli długo.'])
-  })
-
-  it('репліки з тире й «nr» перед числом', () => {
-    expect(sentences('— Skąd jesteście? — Jestem Polak.')).toEqual(['— Skąd jesteście?', '— Jestem Polak.'])
-    expect(sentences('— Tułałem się — odpowiedział.')).toEqual(['— Tułałem się — odpowiedział.'])
-    expect(sentences('Mieszkam w domu nr. 7 przy rynku.')).toEqual(['Mieszkam w domu nr. 7 przy rynku.'])
-  })
-
-  it('слова з польськими літерами — цілі', () => {
-    expect(words('Zażółć gęślą jaźń, ćma!')).toEqual(['Zażółć', 'gęślą', 'jaźń', 'ćma'])
-  })
-})

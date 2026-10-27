@@ -8,6 +8,7 @@ import { htmlBlocks } from '../../src/core/import/html.ts'
 import { formatForExtension, importBook, importFile, maxFileSize } from '../../src/core/import/importer.ts'
 import { decodeText, parseMarkdown, parsePlainText } from '../../src/core/import/text.ts'
 import { ZipArchive } from '../../src/core/import/zip.ts'
+import { demoBook } from '../fixtures/language.ts'
 import { makeEPUB, zipArchive } from '../fixtures/zip-writer.ts'
 
 const utf8 = (s: string) => new TextEncoder().encode(s)
@@ -87,17 +88,12 @@ code()
   it('вбудована демо-книжка', async () => {
     const data = new Uint8Array(readFileSync(resolve(process.cwd(), 'public/demo.md')))
     const book = await importBook(data, 'md', 'demo')
-    expect(book.title).toBe('Latarnik (fragment)')
-    expect(book.author).toBe('Henryk Sienkiewicz')
-    expect(book.chapters.map((c) => c.title)).toEqual(['Rozdział I', 'Rozdział II'])
-    expect(book.chapters[0].paragraphs.slice(0, 2).map((p) => p.kind)).toEqual(['heading', 'heading'])
-    expect(summarize(book).sentenceCount).toBeGreaterThan(40)
-    const opening = book.chapters[0].paragraphs.filter((p) => p.kind === 'text')
-    // The initial «J. Horain» does not end the sentence.
-    expect(opening[0].sentences).toHaveLength(1)
-    expect(opening[1].sentences[0]).toBe('Pewnego razu zdarzyło się, że latarnik w Aspinwall, niedaleko Panamy, przepadł bez wieści.')
-    const dialogue = book.chapters[1].paragraphs.map((p) => p.sentences.join(' '))
-    expect(dialogue).toContain('— Skąd jesteście?')
+    expect(book.title).toBe(demoBook.title)
+    expect(book.author).toBe(demoBook.author)
+    expect(book.chapters.map((c) => c.title)).toHaveLength(2)
+    expect(book.chapters[1].title).toBe(demoBook.secondChapter)
+    expect(summarize(book).sentenceCount).toBeGreaterThan(15)
+    // The sentences of the demo itself are checked in language.test.ts.
   })
 })
 
@@ -200,17 +196,5 @@ describe('BookImporter', () => {
     expect(book.title).toBe('My Story')
     expect(book.format).toBe('txt')
     expect(book.chapters[0].paragraphs[0].sentences).toEqual(['Hello there.', 'General Kenobi.'])
-  })
-})
-
-describe('польські заголовки розділів у TXT', () => {
-  it('rozdział, część, księga, tom, prolog, epilog', async () => {
-    const { isChapterHeading } = await import('../../src/core/import/text.ts')
-    for (const heading of ['Rozdział I', 'ROZDZIAŁ PIERWSZY', 'Część druga', 'Księga trzecia: Wojna', 'Tom II', 'Prolog', 'Epilog', 'Chapter 3']) {
-      expect(isChapterHeading(heading), heading).toBe(true)
-    }
-    for (const text of ['Rozdziałka była mała.', 'Tomek poszedł do domu.', 'Prologiem tej historii był list.']) {
-      expect(isChapterHeading(text), text).toBe(false)
-    }
   })
 })

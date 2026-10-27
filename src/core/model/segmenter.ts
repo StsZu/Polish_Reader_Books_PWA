@@ -1,7 +1,9 @@
 // Port of EnglishReader/Model/TextSegmenter.swift. NLTokenizer is replaced by Intl.Segmenter (ICU);
-// ICU breaks after abbreviations («św.», «prof.») that continue the sentence, so those are glued back.
+// ICU breaks after abbreviations that continue the sentence (src/core/language.ts), so those are glued back.
 import type { Book, BookFormat, Paragraph, RawBook } from './book.ts'
-import { abbreviations as abbreviationList, numberAbbreviations as numberAbbreviationList, sourceLanguage } from '../language.ts'
+import {
+  abbreviations as abbreviationList, dialogueDashStartsSentence, numberAbbreviations as numberAbbreviationList, sourceLanguage,
+} from '../language.ts'
 
 export interface WordRange {
   start: number
@@ -35,15 +37,19 @@ export function gluesToNext(sentence: string, next: string): boolean {
 /**
  * Splits a paragraph into trimmed sentences. Very long sentences stay whole:
  * translation and speech both work per sentence, so only splitting at real
- * boundaries keeps the Ukrainian line aligned with its Polish source.
+ * boundaries keeps the Ukrainian line aligned with its source.
  */
 export function sentences(text: string): string[] {
   const cleaned = normalizeWhitespace(text)
   if (!cleaned) return []
   const result: string[] = []
-  // ICU does not break before a dialogue dash («…jesteście? — Jestem Polak.»); a new reply starts there
-  // when the dash is followed by a capital letter. A lower-case attribution («— spytał.») stays glued below.
-  const pieces = [...sentenceSegmenter.segment(cleaned)].flatMap(({ segment }) => segment.split(/(?<=[.?!…])\s+(?=[—–]\s*\p{Lu})/u))
+  // ICU does not break before a dialogue dash («…jesteście? — Jestem Polak.»); where the dash starts a reply
+  // (language.ts), a new sentence starts there when the dash is followed by a capital letter.
+  // A lower-case attribution («— spytał.») stays glued below.
+  const segments = [...sentenceSegmenter.segment(cleaned)].map(({ segment }) => segment)
+  const pieces = dialogueDashStartsSentence
+    ? segments.flatMap((segment) => segment.split(/(?<=[.?!…])\s+(?=[—–]\s*\p{Lu})/u))
+    : segments
   for (const segment of pieces) {
     const sentence = segment.trim()
     if (!sentence) continue

@@ -1,6 +1,6 @@
 // Port of SystemSpeechEngine (AVSpeechSynthesizer) on the Web Speech API. Works offline and without a key.
 import { abortError, type SpeechEngine } from '../../contracts.ts'
-import { preferredVoiceLocale, sourceLanguage } from '../language.ts'
+import { fallbackVoiceLanguage, preferredVoiceLocale, sourceLanguage } from '../language.ts'
 
 export const NO_SYSTEM_VOICE = 'Системний голос недоступний у цьому браузері.'
 
@@ -53,7 +53,7 @@ export class SystemSpeechEngine implements SpeechEngine {
     const utterance = new SpeechSynthesisUtterance(this.text)
     const voice = bestVoice()
     if (voice) utterance.voice = voice
-    utterance.lang = voice?.lang ?? 'pl-PL'
+    utterance.lang = voice?.lang ?? fallbackVoiceLanguage
     utterance.rate = Math.min(2, Math.max(0.5, this.rate))
     utterance.onend = () => this.finish(utterance)
     utterance.onerror = (event) => {

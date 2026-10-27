@@ -9,8 +9,6 @@ import {
 } from '../../src/core/ai/translation.ts'
 import { ExplanationService, WordLookupService, decodeWordCard, encodeWordCard } from '../../src/core/ai/word.ts'
 import { closeDB } from '../../src/core/storage/db.ts'
-import { explanationDefaultTemplate } from '../../src/core/ai/prompts.ts'
-import { defaultExplanationTemplate } from '../../src/core/storage/settings.ts'
 
 type Handler = (url: string, body: Record<string, unknown>) => Response | Promise<Response>
 
@@ -255,22 +253,6 @@ describe('explanation', () => {
 describe('verbatim Swift strings', () => {
   const file = 'build/swift-strings.json'
   const strings = existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : null
-
-  // Polish Reader adapts the prompts (specs/002-polish); the JSON contract of every request stays the Swift one.
-  it.skipIf(!strings)('prompts keep the Swift JSON contract and are adapted to Polish', () => {
-    const keys = (text: string) => [...text.matchAll(/"([a-z_]+)":/g)].map((m) => m[1]).sort()
-    expect(keys(prompts.translationSystemPrompt)).toEqual(keys(strings.translationSystemPrompt))
-    expect(keys(prompts.wordCardSystemPrompt)).toEqual(keys(strings.wordCardSystemPrompt))
-    expect(keys(prompts.explanationSystemPrompt)).toEqual(keys(strings.explanationSystemPrompt))
-    for (const text of [prompts.translationSystemPrompt, prompts.wordCardSystemPrompt, prompts.explanationSystemPrompt, prompts.speechInstructions]) {
-      expect(text).toContain('Polish')
-      expect(text).not.toContain('English')
-    }
-    expect(explanationDefaultTemplate).toContain('{слово}')
-    expect(explanationDefaultTemplate).toContain('{контекст}')
-    expect(explanationDefaultTemplate).toContain('польськ')
-    expect(defaultExplanationTemplate).toBe(explanationDefaultTemplate)
-  })
 
   it.skipIf(!strings)('AI error texts match the Swift sources', () => {
     const swift = (key: string, values: Record<string, string> = {}) =>
