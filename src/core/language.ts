@@ -34,6 +34,9 @@ export const abbreviations = [
 /** Abbreviations glued only before a number («nr 7», «s. 12»). */
 export const numberAbbreviations = ['nr', 's', 'str', 'poz', 'rozdz', 't', 'vol', 'no', 'p']
 
+/** Capital letters that are a word before a full stop, not an initial: none, «I.» is an initial («I. Krasicki»). */
+export const capitalLetterWords: string[] = []
+
 /** Whether a dialogue dash after the end of a sentence starts a new one («…? — Jestem Polak.»). */
 export const dialogueDashStartsSentence = true
 

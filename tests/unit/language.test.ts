@@ -79,6 +79,7 @@ describe('Polish Reader: segmentation', () => {
       .toEqual(['Mieszkał przy ul. Długiej obok kościoła św. Jana.', 'Potem wyjechał.'])
     expect(sentences('Wykład prowadził prof. Nowak, a pisał o tym J. Horain. Było późno.'))
       .toEqual(['Wykład prowadził prof. Nowak, a pisał o tym J. Horain.', 'Było późno.'])
+    expect(sentences('Pisał o tym I. Krasicki. Potem wyjechał.')).toEqual(['Pisał o tym I. Krasicki.', 'Potem wyjechał.'])
     expect(sentences('Kupił różne owoce, np. Jabłka i gruszki.')).toEqual(['Kupił różne owoce, np. Jabłka i gruszki.'])
   })
 
